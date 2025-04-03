@@ -4,6 +4,14 @@
 
 This is a test task. The provided liquid files adds a custom PDP section to any shopify theme for creating custom cusrtains product, the setup details for this has been described below. The product page design is fully responsive.
 
+## Demo Link
+Here is the demo link for the custom pdp:
+
+https://task-am.myshopify.com/products/curtain
+
+password: 1122
+
+
 ## Setup Instructions
 
 ### Add Product Variants
