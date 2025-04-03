@@ -1,0 +1,485 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@7/swiper-bundle.min.css" />
+
+<style>
+  .custom-curtain-pdp {
+    padding: 40px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .product-single {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .product-single__media-group, .product-single__info-container {
+    width: 48%;
+  }
+
+  .product-single__title {
+    font-size: 28px;
+    margin: 0px;
+    font-weight: 600;
+  }
+
+  .product-single__description {
+    margin-bottom: 30px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .product-single__media-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    height: 400px;
+  }
+
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-single__thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .thumb-swiper {
+    width: 100%;
+    height: 20%;
+    box-sizing: border-box;
+    padding: 10px 0;
+  }
+  
+  .thumb-swiper .swiper-slide {
+    width: 25%;
+    height: 100%;
+    opacity: 0.6;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+  }
+  
+  .thumb-swiper .swiper-slide-thumb-active {
+    opacity: 1;
+    box-shadow: 0 0 0 2px #2c6ecb;
+  }
+
+  .curtain-product-configurator {
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+
+  .configurator-section {
+    margin-bottom: 20px;
+  }
+
+  .configurator-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .width-selector,
+  .drop-selector {
+    display: flex;
+    align-items: center;
+  }
+
+  .width-selector-wrapper,
+  .drop-selector-wrapper {
+    flex-grow: 1;
+  }
+
+  .select-width,
+  .select-drop {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    cursor: pointer;
+  }
+
+  .width-info,
+  .drop-info {
+    margin-left: 12px;
+    position: relative;
+  }
+
+  .info-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .info-tooltip {
+    position: absolute;
+    top: -5px;
+    left: 30px;
+    width: 200px;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    font-size: 13px;
+    color: #555;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .info-icon:hover + .info-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-5px);
+  }
+
+  .panel-badge {
+    display: inline-block;
+    background: #f0f7ff;
+    border: 1px solid #d0e3ff;
+    color: #2c6ecb;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .product-price-container {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+
+  .dynamic-price {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c6ecb;
+    margin-right: 10px;
+  }
+
+  .product-form-container {
+    margin-top: 25px;
+  }
+
+  .product-form {
+    display: flex;
+    gap: 15px;
+  }
+
+  .quantity-selector {
+    display: flex;
+    flex-direction: column;
+    width: 80px;
+  }
+
+  .quantity-selector label {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .quantity-input {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .btn--add-to-cart {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 25px;
+    border-radius: 6px;
+    background-color: #2c6ecb;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn--add-to-cart:hover {
+    background-color: #2659a7;
+  }
+
+  .btn--add-to-cart.sold-out {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .btn--add-to-cart:disabled {
+    opacity: 0.7;
+  }
+  
+  .cart-price {
+    margin-right: 10px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-single__media-group, .product-single__info-container {
+      width: 100%;
+    }
+    
+    .product-single__media-group {
+      margin-bottom: 30px;
+    }
+    
+    .product-form {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .quantity-selector {
+      width: 100%;
+    }
+    
+    .product-single__title {
+      font-size: 24px;
+    }
+    
+    .configurator-section-title {
+      font-size: 15px;
+    }
+  }
+</style>
+
+<div class="custom-curtain-pdp">
+  <div class="page-width">
+    <div class="product-single">
+      <div class="product-single__media-group">
+        <div class="product-single__media-wrapper">
+          <div class="swiper main-swiper">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                <div class="swiper-slide">
+                  <img src="{{ media | img_url: '800x' }}" alt="{{ media.alt | escape }}">
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+        
+        {% if product.media.size > 1 %}
+          <div class="thumb-swiper">
+            <div class="swiper-wrapper">
+              {% for media in product.media %}
+                <div class="swiper-slide">
+                  <img src="{{ media | img_url: '150x' }}" alt="{{ media.alt | escape }}">
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="product-single__info-container">
+        <h1 class="product-single__title">{{ product.title }}</h1>
+        
+        <div class="product-single__description rte">
+          {{ product.description }}
+        </div>
+        
+        <div class="curtain-product-configurator">
+          <div class="configurator-section">
+            <h3 class="configurator-section-title">Select Width</h3>
+            <div class="width-selector">
+              <div class="width-selector-wrapper">
+                <select id="width-selector" class="select-width">
+                {% for value in product.metafields.custom.width.value %}
+                  <option value="{{ value }}">{{ value }}</option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="configurator-section">
+            <h3 class="configurator-section-title">Select Drop</h3>
+            <div class="drop-selector">
+              <div class="drop-selector-wrapper">
+                <select id="drop-selector" class="select-drop">
+                  {% for option in product.options_with_values %}
+                  {% if option.name == 'Drop' %}
+                    {% for value in option.values %}
+                      <option value="{{ value }}">{{ value }}</option>
+                    {% endfor %}
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-form-container">
+            {% form 'product', product %}
+              <input type="hidden" name="quantity" min="1" value="1">
+              <input type="hidden" id="variant-id-input" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button type="submit" class="btn--add-to-cart">
+                <span class="cart-price"></span>
+                <span class="cart-text">Add to cart</span>
+              </button>
+            {% endform %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@7/swiper-bundle.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const thumbSwiper = new Swiper(".thumb-swiper", {
+      spaceBetween: 10,
+      slidesPerView: 4,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+    
+    const mainSwiper = new Swiper(".main-swiper", {
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      thumbs: {
+        swiper: thumbSwiper,
+      },
+    });
+    
+    const widthSelector = document.getElementById('width-selector');
+    const dropSelector = document.getElementById('drop-selector');
+    const cartPriceDisplay = document.querySelector('.cart-price');
+    const variantIdInput = document.getElementById('variant-id-input');
+    const panelIndicator = document.getElementById('panel-indicator');
+    
+    const fabric_panel_count = {{ product.metafields.custom.fabric_panel_count.value | json }};
+    const price_mappings = {{ product.metafields.custom.price_mappings.value | json }};
+    
+    const variantMapping = {};
+    const variantInventory = {};
+    {% for variant in product.variants %}
+      variantMapping["{{ variant.title }}"] = {{ variant.id }};
+      variantInventory[{{ variant.id }}] = {{ variant.available }};
+    {% endfor %}
+    
+    const extractNumericValue = (value) => {
+      return value.split(" ")[0];
+    };
+    
+    const updateProduct = () => {
+      if (!widthSelector.value || !dropSelector.value) return;
+      
+      const selectedWidth = extractNumericValue(widthSelector.value);
+      const selectedDrop = extractNumericValue(dropSelector.value);
+      
+      const requiredPanels = fabric_panel_count[selectedWidth];
+      
+      const priceKey = `${requiredPanels}/${selectedDrop}`;
+      
+      const price = price_mappings[priceKey];
+      
+      if (price) {
+        let formattedPrice = new Intl.NumberFormat('{{ shop.locale }}', {
+          style: 'currency',
+          currency: '{{ shop.currency }}'
+        }).format(price);
+        
+        const currency_symbol = "{{ shop.money_format }}".split("{")[0]
+        cartPriceDisplay.innerText = currency_symbol+formattedPrice.split("\u00A0")[1];
+        
+        const variantKey = `${requiredPanels} / ${selectedDrop} cm`;
+        const variantId = variantMapping[variantKey];
+        const addToCartButton = document.querySelector('.btn--add-to-cart');
+        const addToCartText = document.querySelector('.btn--add-to-cart .cart-text');
+    
+        if (variantId) {
+          variantIdInput.value = variantId;
+          
+          const isAvailable = variantInventory[variantId];
+          
+          if (isAvailable) {
+            addToCartButton.disabled = false;
+            addToCartText.innerText = "Add to cart";
+            addToCartButton.classList.remove('sold-out');
+          } else {
+            addToCartButton.disabled = true;
+            addToCartText.innerText = "Sold Out";
+            addToCartButton.classList.add('sold-out');
+          }
+          
+          } else {
+            addToCartButton.disabled = true;
+            addToCartButton.innerText = "Unavailable";
+            addToCartButton.classList.add('sold-out');
+            console.log(`No variant found for ${variantKey}`);
+          }
+        }
+    };
+    
+    updateProduct();
+
+    widthSelector.addEventListener('change', updateProduct);
+    dropSelector.addEventListener('change', updateProduct);
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Custom Product",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Custom product"
+      }
+    ]
+  }
+{% endschema %}
