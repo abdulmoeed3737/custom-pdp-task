@@ -1,11 +1,26 @@
+<!-- Custom Curtain PDP
+  This template provides a custom product page for curtain products with:
+    - Product gallery with thumbnails
+    - Fabric and color selection with modal popup
+    - Product configurator with multiple customization options
+    - Dynamic pricing based on selections
+    - Mobile responsive design
+-->
+
+<!-- External Dependencies -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@7/swiper-bundle.min.css" />
 
+<!-- Main Styles -->
 <style>
+  /* -------------------------------------------
+   * Base Component Styling
+   * ------------------------------------------- */
   .custom-curtain-pdp {
     padding: 40px 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 
+  /* Product Container - Creates a two-column layout for desktop */
   .product-single {
     display: flex;
     flex-wrap: wrap;
@@ -16,6 +31,13 @@
     width: 48%;
   }
 
+  .product-single__media-group {
+    position: sticky;
+    top: 40px;
+    align-self: flex-start;
+  }
+
+  /* Typography */
   .product-single__title {
     font-size: 28px;
     margin: 0px;
@@ -28,94 +50,140 @@
     line-height: 1.6;
   }
 
-  .product-single__media-wrapper {
-    position: relative;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    height: 400px;
-  }
-
-  .swiper {
-    width: 100%;
-    height: 100%;
+  /* -------------------------------------------
+   * Product Image Gallery with Swiper.js
+   * ------------------------------------------- */
+  .slider-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
   }
   
-  .swiper-slide {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .swiper-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .product-single__thumbnails {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-  }
-
+  /* Thumbnail slider */
   .thumb-swiper {
-    width: 100%;
-    height: 20%;
+    width: 100px;
+    height: 400px;
     box-sizing: border-box;
-    padding: 10px 0;
+    overflow: hidden;
   }
   
   .thumb-swiper .swiper-slide {
-    width: 25%;
-    height: 100%;
+    width: 100%;
+    height: 80px;
     opacity: 0.6;
     cursor: pointer;
-    border-radius: 4px;
     overflow: hidden;
     transition: opacity 0.3s ease;
   }
   
   .thumb-swiper .swiper-slide-thumb-active {
     opacity: 1;
-    box-shadow: 0 0 0 2px #2c6ecb;
+  }
+  
+  .thumb-swiper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Main product image slider */
+  .product-single__media-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+  }
+  
+  .main-swiper .swiper-slide img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
   }
 
+  /* -------------------------------------------
+   * Product Configurator
+   * ------------------------------------------- */
   .curtain-product-configurator {
     border-radius: 8px;
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
   }
 
+  /* Standard configuration section */
   .configurator-section {
-    margin-bottom: 20px;
+    padding: 20px;
+    padding-right: 0px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid darkgrey;
+  }
+
+  /* Configuration section that opens popup */
+  .configurator-section-popup {
+    background: whitesmoke;
+    padding: 15px 20px;
+    padding-right: 0px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
   }
 
   .configurator-section-title {
     font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-weight: 400;
+    margin: 0px;
     color: #333;
+    width: 30%;
   }
 
+  /* Selector components for different product options */
   .width-selector,
-  .drop-selector {
+  .drop-selector,
+  .chainside-selector,
+  .chaincolor-selector,
+  .intallheight-selector {
     display: flex;
     align-items: center;
+    width: 60%;
+    height: 20px;
   }
 
+  .color-selector, .fabric-selector, .chainside-selector, .chaincolor-selector, .installheight-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 60%;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .color-selector, .fabric-selector {
+    padding-right: 13px;
+  }
+
+  /* Wrapper for select elements */
   .width-selector-wrapper,
-  .drop-selector-wrapper {
+  .drop-selector-wrapper,
+  .chainside-selector-wrapper,
+  .chaincolor-selector-wrapper,
+  .installheight-selector-wrapper {
     flex-grow: 1;
   }
 
+  /* Custom Select Styling */
   .select-width,
-  .select-drop {
+  .select-drop,
+  .select-chainside,
+  .select-chaincolor,
+  .select-installheight {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
+    padding: 0;
+    border: 0;
     border-radius: 6px;
     font-size: 15px;
     appearance: none;
@@ -126,25 +194,79 @@
     cursor: pointer;
   }
 
-  .width-info,
-  .drop-info {
-    margin-left: 12px;
+  .select-width:focus-visible,
+  .select-drop:focus-visible,
+  .select-chainside:focus-visible,
+  .select-chaincolor:focus-visible,
+  .select-installheight:focus-visible {
+    box-shadow: none;
+    outline: none;
+  }
+
+  /* -------------------------------------------
+   * Info Icon with Tooltip
+   * ------------------------------------------- */
+  .info-icon-wrapper {
     position: relative;
+    display: inline-block;
   }
 
   .info-icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: #e0e0e0;
-    color: #555;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
+    color: white;
+    transition: color 0.3s;
+    background: black;
+    border-radius: 100%;
+    padding: 2px 7px;
   }
 
+  .info-box {
+    display: none;
+    position: absolute;
+    bottom: 125%;
+    right: 0;
+    min-width: 160px;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    white-space: normal;
+  }
+
+  .info-icon:hover+.info-box {
+    display: block;
+  }
+
+  .info-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 5px;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+  }
+
+  /* Arrow Icon for selectors */
+  .arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .arrow-icon svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 3px; 
+  }
+
+  /* Tooltip for additional information */
   .info-tooltip {
     position: absolute;
     top: -5px;
@@ -168,6 +290,7 @@
     transform: translateY(-5px);
   }
 
+  /* Panel badge for panel count information */
   .panel-badge {
     display: inline-block;
     background: #f0f7ff;
@@ -180,6 +303,9 @@
     margin-top: 10px;
   }
 
+  /* -------------------------------------------
+   * Price Display and Add to Cart
+   * ------------------------------------------- */
   .product-price-container {
     display: flex;
     align-items: baseline;
@@ -222,24 +348,26 @@
     border-radius: 6px;
   }
 
+  /* Add to Cart Button */
   .btn--add-to-cart {
     flex-grow: 1;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 15px 25px;
     border-radius: 6px;
-    background-color: #2c6ecb;
+    background-color: #2f2f2f;
     color: white;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease;
   }
 
   .btn--add-to-cart:hover {
-    background-color: #2659a7;
+    background-color: black;
   }
 
   .btn--add-to-cart.sold-out {
@@ -255,15 +383,213 @@
     margin-right: 10px;
   }
 
+  /* -------------------------------------------
+   * Modal Popup for Fabric & Color Selection
+   * ------------------------------------------- */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .popup-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .popup-content {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 1000px;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .popup-overlay.active .popup-content {
+    transform: scale(1);
+    opacity: 1;
+  }
+  
+  .popup-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+  }
+
+  /* Swatches containers layout */
+  .swatches-container {
+    display: flex;
+    gap: 15%;
+  }
+
+  /* Fabric swatches */
+  .fabric-swatches-container {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .fabric-swatches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .fabric-swatch {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    background: #f2f2f2;
+    width: max-content;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+  }
+
+  .fabric-swatch img {
+    width: 65px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  .fabric-swatch.selected {
+    border: 1px solid black;
+  }
+
+  /* Color swatches */
+  .color-swatches-container {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .color-swatches {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .color-swatch {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    background: #f2f2f2;
+    width: max-content;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+  }
+
+  .color-swatch .bg {
+    width: 65px;
+    height: 50px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .color-swatch.selected {
+    border: 1px solid black;
+  }
+
+  /* Confirm button for selection */
+  .confirm-btn {
+    width: 100%;
+  }
+
+  .confirm-btn.mobile {
+    display: none;
+  }
+
+  .confirm-btn.desktop {
+    display: block;
+  }
+
+  .confirm-btn button {
+    appearance: none;
+    border: 0;
+    background: #2f2f2f;
+    color: white;
+    padding: 15px 30px;
+    width: 60%;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s ease all;
+  }
+
+  .confirm-btn button:hover {
+    background: black;
+  }
+
+  /* -------------------------------------------
+   * Responsive Adjustments for Tablets
+   * ------------------------------------------- */
+  @media(max-width: 1024px) {
+    .fabric-swatches {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    .color-swatches {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .fabric-swatch img, .color-swatch .bg {
+      width: 50px;
+      height: 35px;
+    }
+  }
+
+  /* -------------------------------------------
+   * Responsive Adjustments for Mobile
+   * ------------------------------------------- */
   @media screen and (max-width: 749px) {
+    /* Switch to single column layout */
     .product-single__media-group, .product-single__info-container {
       width: 100%;
     }
-    
+
     .product-single__media-group {
+      position: relative;
+      top: 0px;
       margin-bottom: 30px;
     }
     
+    /* Adjust form layout for mobile */
     .product-form {
       flex-direction: column;
       gap: 10px;
@@ -276,55 +602,178 @@
     .product-single__title {
       font-size: 24px;
     }
+
+    /* Rearrange slider for mobile */
+    .slider-container {
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
+
+    .thumb-swiper {
+      width: 100%;
+      height: auto;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .thumb-swiper .swiper-wrapper {
+      flex-direction: row !important;
+    }
+
+    .thumb-swiper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Adjust image heights for mobile */
+    .product-single__media-wrapper {
+      height: 300px;
+    }
+
+    .main-swiper .swiper-slide img {
+      height: 300px;
+    }
     
     .configurator-section-title {
       font-size: 15px;
     }
+
+    /* Mobile popup adjustments */
+    .popup-content {
+      padding: 20px;
+      height: 90vh;
+      overflow-y: auto;
+    }
+
+    .swatches-container {
+      flex-direction: column;
+    }
+
+    .fabric-swatches-container,
+    .color-swatches-container {
+      width: 100%;
+    }
+
+    /* Mobile button visibility */
+    .confirm-btn.mobile {
+      display: block;
+    }
+
+    .confirm-btn.desktop {
+      display: none;
+    }
+
+    /* Mobile popup layout */
+    .popup-close{
+      order: 1;
+      position: sticky;
+      top: 0;
+      right: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .fabric-swatches-container {
+      order: 2;
+    }
+
+    .color-swatches-container {
+      order: 3;
+    }
+
+    /* Mobile swatch grid adjustments */
+    .fabric-swatches,
+    .color-swatches {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .fabric-swatch img, .color-swatch .bg {
+      width: 50px;
+      height: 35px;
+    }
   }
 </style>
 
+<!-- Main Product Template Structure -->
 <div class="custom-curtain-pdp">
   <div class="page-width">
     <div class="product-single">
+      <!-- Product Image Gallery -->
       <div class="product-single__media-group">
-        <div class="product-single__media-wrapper">
-          <div class="swiper main-swiper">
-            <div class="swiper-wrapper">
-              {% for media in product.media %}
-                <div class="swiper-slide">
-                  <img src="{{ media | img_url: '800x' }}" alt="{{ media.alt | escape }}">
-                </div>
-              {% endfor %}
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
-          </div>
-        </div>
-        
-        {% if product.media.size > 1 %}
+        <div class="slider-container">
+          
+          {% if product.media.size > 1 %}
           <div class="thumb-swiper">
             <div class="swiper-wrapper">
               {% for media in product.media %}
-                <div class="swiper-slide">
-                  <img src="{{ media | img_url: '150x' }}" alt="{{ media.alt | escape }}">
-                </div>
+              <div class="swiper-slide">
+                <img src="{{ media | img_url: '150x' }}" alt="{{ media.alt | escape }}">
+              </div>
               {% endfor %}
             </div>
           </div>
-        {% endif %}
+          {% endif %}
+      
+          <div class="product-single__media-wrapper">
+            <div class="swiper main-swiper">
+              <div class="swiper-wrapper">
+                {% for media in product.media %}
+                <div class="swiper-slide">
+                  <img src="{{ media | img_url: '800x' }}" alt="{{ media.alt | escape }}">
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+      
+        </div>
       </div>
 
+      <!-- Product Information and Configuration -->
       <div class="product-single__info-container">
+        <span>Home / products / {{ product.title | downcase }}</span>
         <h1 class="product-single__title">{{ product.title }}</h1>
         
         <div class="product-single__description rte">
           {{ product.description }}
         </div>
         
+        <!-- Product Configurator -->
         <div class="curtain-product-configurator">
+          <!-- Fabric Selection -->
+          <div class="configurator-section-popup">
+            <h3 class="configurator-section-title">Fabric</h3>
+            <div class="fabric-selector" onclick="openPopup()">
+              <span class="selected-fabric">Choose Fabric</span>
+              <div class="arrow-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color Selection -->
+          <div class="configurator-section-popup">
+            <h3 class="configurator-section-title">Color</h3>
+            <div class="color-selector" onclick="openPopup()">
+              <span class="selected-color">Choose Colour</span>
+              <div class="arrow-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Width Selection -->
           <div class="configurator-section">
-            <h3 class="configurator-section-title">Select Width</h3>
+            <h3 class="configurator-section-title">Width</h3>
             <div class="width-selector">
               <div class="width-selector-wrapper">
                 <select id="width-selector" class="select-width">
@@ -334,10 +783,17 @@
                 </select>
               </div>
             </div>
+            <div class="info-icon-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-box">
+                {{ product.metafields.custom.width_info.value }}
+              </div>
+            </div>
           </div>
 
+          <!-- Drop Selection -->
           <div class="configurator-section">
-            <h3 class="configurator-section-title">Select Drop</h3>
+            <h3 class="configurator-section-title">Drop</h3>
             <div class="drop-selector">
               <div class="drop-selector-wrapper">
                 <select id="drop-selector" class="select-drop">
@@ -351,12 +807,85 @@
                 </select>
               </div>
             </div>
+            <div class="info-icon-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-box">
+                {{ product.metafields.custom.drop_info.value }}
+              </div>
+            </div>
           </div>
 
+          <!-- Chain Side Selection -->
+          <div class="configurator-section">
+            <h3 class="configurator-section-title">Chain Side</h3>
+            <div class="chainside-selector">
+              <div class="chainside-selector-wrapper">
+                <select id="chainside-selector" class="select-chainside">
+                  {% for value in product.metafields.custom.chain_side.value %}
+                      <option value="{{ value }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="info-icon-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-box">
+                {{ product.metafields.custom.chain_side_info.value }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Chain Color Selection -->
+          <div class="configurator-section">
+            <h3 class="configurator-section-title">Chain Colour</h3>
+            <div class="chaincolor-selector">
+              <div class="chaincolor-selector-wrapper">
+                <select id="chaincolor-selector" class="select-chaincolor">
+                  {% for value in product.metafields.custom.chain_color.value %}
+                      <option value="{{ value }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="info-icon-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-box">
+                {{ product.metafields.custom.chain_colour_info.value }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Installation Height Selection -->
+          <div class="configurator-section">
+            <h3 class="configurator-section-title">Installation Height</h3>
+            <div class="installheight-selector">
+              <div class="installheight-selector-wrapper">
+                <select id="installheight-selector" class="select-installheight">
+                  {% for value in product.metafields.custom.install_height.value %}
+                      <option value="{{ value }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="info-icon-wrapper">
+              <span class="info-icon">?</span>
+              <div class="info-box">
+                {{ product.metafields.custom.installation_height_info.value }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Add to Cart Form -->
           <div class="product-form-container">
             {% form 'product', product %}
               <input type="hidden" name="quantity" min="1" value="1">
               <input type="hidden" id="variant-id-input" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="properties[Width]" id="selected-width-property" value="">
+              <input type="hidden" name="properties[Colour]" id="selected-color-property" value="">
+              <input type="hidden" name="properties[Fabric]" id="selected-fabric-property" value="">
+              <input type="hidden" name="properties[Chain Side]" id="selected-chainside-property" value="">
+              <input type="hidden" name="properties[Chain Colour]" id="selected-chaincolor-property" value="">
+              <input type="hidden" name="properties[Installation Height]" id="selected-installheight-property" value="">
               <button type="submit" class="btn--add-to-cart">
                 <span class="cart-price"></span>
                 <span class="cart-text">Add to cart</span>
@@ -369,37 +898,100 @@
   </div>
 </div>
 
+<!-- Fabric & Color Selection Popup -->
+<div id="popup-overlay" class="popup-overlay">
+  <div class="popup-content">
+    <button class="popup-close" onclick="closePopup()">×</button>
+    <div class="swatches-container">
+      <div class="confirm-btn mobile">
+          <button>Confirm my choice</button>
+        </div>
+      <!-- Fabric Swatches -->
+      <div class="fabric-swatches-container">
+        <h2>Choose Fabric</h2>
+        <div class="fabric-swatches">
+          {% for fabric_swatch in shop.metaobjects.fabric.values %}
+            <div class="fabric-swatch" value={{ fabric_swatch.name }}>
+              <img src="{{ fabric_swatch.image | img_url: 'master' }}"/>
+              <span class="fabric-swatch-name">{{ fabric_swatch.name }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Color Swatches -->
+      <div class="color-swatches-container">
+        <h2>Choose Colour</h2>
+        <div class="color-swatches">
+          {% for color_swatch in shop.metaobjects.color.values %}
+            <div class="color-swatch" value={{ color_swatch.name }}>
+              <div style="background: {{ color_swatch.color }}" class="bg"></div>
+              <span class="color-swatch-name">{{ color_swatch.name }}</span>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="confirm-btn desktop">
+          <button>Confirm my choice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@7/swiper-bundle.min.js"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const thumbSwiper = new Swiper(".thumb-swiper", {
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
+    if (window.innerWidth > 749) {
+      const thumbSwiper = new Swiper(".thumb-swiper", {
+        spaceBetween: 10,
+        slidesPerView: 5,
+        freeMode: true,
+        watchSlidesProgress: true,
+        direction: 'vertical'
+      });
+      
+      const mainSwiper = new Swiper(".main-swiper", {
+        spaceBetween: 10,
+        thumbs: {
+          swiper: thumbSwiper,
+        },
+      });
+    } else {
+      const thumbSwiper = new Swiper(".thumb-swiper", {
+        spaceBetween: 10,
+        slidesPerView: 5,
+        freeMode: true,
+        watchSlidesProgress: true,
+        direction: 'horizontal'
+      });
+      
+      const mainSwiper = new Swiper(".main-swiper", {
+        spaceBetween: 10,
+        thumbs: {
+          swiper: thumbSwiper,
+        },
     });
-    
-    const mainSwiper = new Swiper(".main-swiper", {
-      spaceBetween: 10,
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-      },
-      thumbs: {
-        swiper: thumbSwiper,
-      },
-    });
+    }
     
     const widthSelector = document.getElementById('width-selector');
     const dropSelector = document.getElementById('drop-selector');
     const cartPriceDisplay = document.querySelector('.cart-price');
     const variantIdInput = document.getElementById('variant-id-input');
     const panelIndicator = document.getElementById('panel-indicator');
+    const fabricSelector = document.querySelector('.fabric-selector');
+    const colorSelector = document.querySelector('.color-selector');
+    const selectedFabric = document.querySelector('.selected-fabric');
+    const selectedColor = document.querySelector('.selected-color');
+    const chainsideSelector = document.getElementById('chainside-selector');
+    const chaincolorSelector = document.getElementById('chaincolor-selector');
+    const installheightSelector = document.getElementById('installheight-selector');
+    const cartButton = document.querySelector(".btn--add-to-cart");
+    const fabricProperty = document.getElementById("selected-fabric-property");
+    const colorProperty = document.getElementById("selected-color-property");
+    const productForm = document.querySelector("form[action='/cart/add']");
+
+    var fabric_swatch;
+    var color_swatch;
     
     const fabric_panel_count = {{ product.metafields.custom.fabric_panel_count.value | json }};
     const price_mappings = {{ product.metafields.custom.price_mappings.value | json }};
@@ -420,6 +1012,8 @@
       
       const selectedWidth = extractNumericValue(widthSelector.value);
       const selectedDrop = extractNumericValue(dropSelector.value);
+
+      document.querySelector('#selected-width-property').value = widthSelector.value;
       
       const requiredPanels = fabric_panel_count[selectedWidth];
       
@@ -460,16 +1054,103 @@
             addToCartButton.disabled = true;
             addToCartButton.innerText = "Unavailable";
             addToCartButton.classList.add('sold-out');
-            console.log(`No variant found for ${variantKey}`);
           }
         }
     };
+
+    const updateChainside = () => {
+      document.getElementById("selected-chainside-property").value = chainsideSelector.value;
+    };
+
+    const updateChaincolor = () => {
+      document.getElementById("selected-chaincolor-property").value = chaincolorSelector.value;
+    };
+
+    const updateInstallheight = () => {
+      document.getElementById("selected-installheight-property").value = installheightSelector.value;
+    }
     
     updateProduct();
+    updateChainside();
+    updateChaincolor();
+    updateInstallheight();
+
+    cartButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(!fabricProperty.value && !colorProperty.value) {
+        alert("Please select fabric and color");
+      } else if(!fabricProperty.value) {
+        alert("Please select fabric");
+      } else if(!colorProperty.value) {
+        alert("Please select color");
+      } else {
+        productForm.submit();
+      }
+    })
+    
 
     widthSelector.addEventListener('change', updateProduct);
     dropSelector.addEventListener('change', updateProduct);
+
+    chainsideSelector.addEventListener('change', updateChainside);
+    chaincolorSelector.addEventListener('change', updateChaincolor);
+    installheightSelector.addEventListener('change', updateInstallheight);
+    
+    fabricSelector.addEventListener('click', () => {
+      console.log("Fabric selector clicked")
+    });
+    colorSelector.addEventListener('click', () => {
+      console.log("Color selector clicked")
+    });
+
+    document.querySelectorAll(".fabric-swatch").forEach((swatch) => {
+      swatch.addEventListener("click", () => {
+        document.querySelectorAll(".fabric-swatch").forEach((item) => {
+          item.classList.remove("selected")
+        })
+        swatch.classList.add("selected")
+        fabric_swatch = swatch.getAttribute('value');
+        console.log(fabric_swatch);
+      })
+    });
+
+    document.querySelectorAll(".color-swatch").forEach((swatch) => {
+      swatch.addEventListener("click", () => {
+        document.querySelectorAll(".color-swatch").forEach((item) => {
+          item.classList.remove("selected")
+        })
+        swatch.classList.add("selected")
+        color_swatch = swatch.getAttribute('value');
+        console.log(color_swatch);
+      })
+    });
+
+    document.querySelectorAll(".confirm-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          if(!fabric_swatch && !color_swatch) {
+            window.alert("Please select fabric and color")
+          } else if (!fabric_swatch) {
+            window.alert("Please select fabric")
+          } else if (!color_swatch) {
+            window.alert("Please select color")
+          } else {
+            selectedFabric.innerText = fabric_swatch;
+            selectedColor.innerText = color_swatch;
+            document.querySelector("#selected-fabric-property").value = fabric_swatch;
+            document.querySelector("#selected-color-property").value = color_swatch;
+            closePopup()
+          }
+        })
+      })
   });
+
+  function openPopup() {
+    document.getElementById("popup-overlay").classList.add("active");
+  }
+
+  function closePopup() {
+    document.getElementById("popup-overlay").classList.remove("active");
+  }
 </script>
 
 {% schema %}
